@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Barrister Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Specific Dashboard Styles */
+        .dashboard-container { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        .welcome-section { margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; }
+        .welcome-section h1 { color: #0f172a; margin: 0; }
+        .date-display { color: #666; margin-top: 5px; }
+        
+        /* Grid for widgets */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .widget { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid #cca43b; }
+        .widget h3 { margin-top: 0; color: #0f172a; }
+        .list-item { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .badge { background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">Barrister Organizer</a>
+        <div>
+            <span style="color:white; margin-right: 15px;">Welcome, Advocate</span>
+            <a href="index.html" class="btn" style="background:#ef4444; color:white;">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="welcome-section">
+            <h1>What is the plan for today?</h1>
+            <div class="date-display" id="currentDate"></div>
+        </div>
+
+        <div class="grid">
+            <div class="widget">
+                <h3>🏛️ Upcoming Hearings</h3>
+                <div class="list-item">
+                    <span>Smith vs. State (Court 4)</span>
+                    <span class="badge">10:30 AM</span>
+                </div>
+                <div class="list-item">
+                    <span>Doe Property Dispute</span>
+                    <span class="badge">02:00 PM</span>
+                </div>
+            </div>
+
+            <div class="widget">
+                <h3>📝 Pending Tasks</h3>
+                <div class="list-item">File Affidavit for Case #204</div>
+                <div class="list-item">Client Meeting: Mr. Sharma</div>
+                <div class="list-item">Review Evidence (Murder Case)</div>
+            </div>
+
+            <div class="widget">
+                <h3>📂 Quick Actions</h3>
+                <button style="width:100%; padding:10px; margin-bottom:5px; background:#0f172a; color:white; border:none; border-radius:4px; cursor:pointer;">+ Add New Case</button>
+                <button style="width:100%; padding:10px; background:#cca43b; color:#0f172a; border:none; border-radius:4px; cursor:pointer;">Upload Document</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', options);
+    </script>
+</body>
+</html>

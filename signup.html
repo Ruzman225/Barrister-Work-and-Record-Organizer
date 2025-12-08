@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign Up - Barrister Organizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">Barrister Organizer</a>
+        <div><a href="login.html">Login</a></div>
+    </nav>
+
+    <div class="form-container">
+        <div class="card">
+            <h2>Join the Firm</h2>
+            <p style="color:#666; font-size:0.9rem;">Start managing cases efficiently</p>
+            <form id="signupForm">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <input type="password" placeholder="Create Password" required>
+                <button type="submit">Create Account</button>
+            </form>
+            <p style="margin-top:15px; font-size:0.8rem;">
+                Already a member? <a href="login.html">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop the form from reloading the page
+            
+            // 1. Show the success message
+            alert("Successfully created account! Redirecting to login...");
+            
+            // 2. Redirect to login page
+            window.location.href = "login.html";
+        });
+    </script>
+</body>
+</html>
