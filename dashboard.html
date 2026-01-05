@@ -4,18 +4,18 @@
     <title>Barrister Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Specific Dashboard Styles */
+        /* Dashboard & Modal Styles */
         .dashboard-container { padding: 2rem; max-width: 1200px; margin: 0 auto; }
-        .welcome-section { margin-bottom: 2rem; border-bottom: 2px solid #ddd; padding-bottom: 1rem; }
-        .welcome-section h1 { color: #0f172a; margin: 0; }
-        .date-display { color: #666; margin-top: 5px; }
-        
-        /* Grid for widgets */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .widget { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid #cca43b; }
-        .widget h3 { margin-top: 0; color: #0f172a; }
-        .list-item { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
-        .badge { background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+        
+        /* Modal Popup Design */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 2rem; width: 500px; border-radius: 8px; max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .close-btn { float: right; cursor: pointer; font-size: 1.5rem; }
     </style>
 </head>
 <body>
@@ -29,43 +29,112 @@
     </nav>
 
     <div class="dashboard-container">
-        <div class="welcome-section">
-            <h1>What is the plan for today?</h1>
-            <div class="date-display" id="currentDate"></div>
-        </div>
-
+        <h1>What is the plan for today?</h1>
         <div class="grid">
             <div class="widget">
-                <h3>🏛️ Upcoming Hearings</h3>
-                <div class="list-item">
-                    <span>Smith vs. State (Court 4)</span>
-                    <span class="badge">10:30 AM</span>
-                </div>
-                <div class="list-item">
-                    <span>Doe Property Dispute</span>
-                    <span class="badge">02:00 PM</span>
-                </div>
+                <h3>🏛️ Quick Actions</h3>
+                <button onclick="openModal()" style="width:100%; padding:10px; background:#0f172a; color:white; border:none; cursor:pointer;">+ Add New Case</button>
             </div>
-
+            
             <div class="widget">
-                <h3>📝 Pending Tasks</h3>
-                <div class="list-item">File Affidavit for Case #204</div>
-                <div class="list-item">Client Meeting: Mr. Sharma</div>
-                <div class="list-item">Review Evidence (Murder Case)</div>
-            </div>
-
-            <div class="widget">
-                <h3>📂 Quick Actions</h3>
-                <button style="width:100%; padding:10px; margin-bottom:5px; background:#0f172a; color:white; border:none; border-radius:4px; cursor:pointer;">+ Add New Case</button>
-                <button style="width:100%; padding:10px; background:#cca43b; color:#0f172a; border:none; border-radius:4px; cursor:pointer;">Upload Document</button>
+                <h3>📝 Status</h3>
+                <p>System is Ready.</p>
+                <p>Connected to Database.</p>
             </div>
         </div>
     </div>
 
+    <div id="caseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Register New Case</h2>
+            <form id="caseForm">
+                
+                <div class="form-group">
+                    <label>CNR Number (16 Digit)</label>
+                    <input type="text" placeholder="KA-BL-..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Case Type</label>
+                    <select>
+                        <option>Civil Suit (O.S.)</option>
+                        <option>Criminal (C.C.)</option>
+                        <option>Bail Application</option>
+                        <option>Family Court</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Petitioner / Complainant</label>
+                    <input type="text" placeholder="Name of Victim/Client">
+                </div>
+                <div class="form-group">
+                    <label>Respondent / Accused</label>
+                    <input type="text" placeholder="Name of Suspect/Opposite Party">
+                </div>
+
+                <div class="form-group">
+                    <label>Under Acts / Sections</label>
+                    <input type="text" placeholder="e.g., Sec 302 IPC">
+                </div>
+
+                <div class="form-group">
+                    <label>Next Hearing Date</label>
+                    <input type="date" required>
+                </div>
+
+                <button type="submit" style="width:100%; padding:10px; background:#cca43b; border:none; cursor:pointer; font-weight:bold;">Save to Records</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Set today's date
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', options);
+        // 1. Check if user is logged in
+        const userEmail = localStorage.getItem("userEmail");
+        if (!userEmail) {
+            alert("Please login first!");
+            window.location.href = "login.html";
+        }
+
+        function openModal() { document.getElementById('caseModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('caseModal').style.display = 'none'; }
+
+        // 2. Handle "Save to Records"
+        document.getElementById('caseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Gather all form data
+            const caseData = {
+                advocate_email: userEmail, // Link to the logged-in lawyer
+                cnr_number: document.querySelector('input[placeholder="KA-BL-..."]').value,
+                case_type: document.querySelector('select').value,
+                petitioner: document.querySelector('input[placeholder="Name of Victim/Client"]').value,
+                respondent: document.querySelector('input[placeholder="Name of Suspect/Opposite Party"]').value,
+                section: document.querySelector('input[placeholder*="Sec 302"]').value,
+                next_hearing: document.querySelector('input[type="date"]').value
+            };
+
+            // Send to Backend (Port 3000)
+            try {
+                const response = await fetch('http://localhost:3000/add-case', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(caseData)
+                });
+
+                if (response.ok) {
+                    alert("Case Saved Successfully to Database!");
+                    closeModal();
+                    document.getElementById('caseForm').reset();
+                } else {
+                    alert("Failed to save case.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Server connection failed. Is Node running?");
+            }
+        });
     </script>
 </body>
 </html>

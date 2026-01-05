@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <nav>
         <a href="index.html" class="logo">Barrister Organizer</a>
         <div><a href="signup.html">Create Account</a></div>
@@ -26,14 +27,29 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Stop page reload
-            
-            // In a real app, you would check password here. 
-            // For this demo, we assume login is successful.
-            
-            // Redirect to the new dashboard page
-            window.location.href = "dashboard.html";
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const email = document.querySelector('input[type="email"]').value;
+            const password = document.querySelector('input[type="password"]').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    // Save email so we know who logged in
+                    localStorage.setItem("userEmail", email);
+                    window.location.href = "dashboard.html";
+                } else {
+                    alert("Invalid Login Details");
+                }
+            } catch (err) {
+                alert("Server Error: Is the backend running?");
+            }
         });
     </script>
 </body>

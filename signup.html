@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <nav>
         <a href="index.html" class="logo">Barrister Organizer</a>
         <div><a href="login.html">Login</a></div>
@@ -27,14 +28,30 @@
     </div>
 
     <script>
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Stop the form from reloading the page
+        document.getElementById('signupForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
             
-            // 1. Show the success message
-            alert("Successfully created account! Redirecting to login...");
-            
-            // 2. Redirect to login page
-            window.location.href = "login.html";
+            const fullName = document.querySelector('input[placeholder="Full Name"]').value;
+            const email = document.querySelector('input[placeholder="Email Address"]').value;
+            const password = document.querySelector('input[placeholder="Create Password"]').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, email, password })
+                });
+
+                if (response.ok) {
+                    alert("Account Created! Redirecting to Login...");
+                    window.location.href = "login.html";
+                } else {
+                    const data = await response.json();
+                    alert("Error: " + (data.error || "Signup Failed"));
+                }
+            } catch (err) {
+                alert("Server Error: Make sure node server.js is running!");
+            }
         });
     </script>
 </body>
